@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxd.dao.ResumesLabelDao">
+    <select id="queryResumesLabelList" resultType="com.fxd.entity.ResumesLabel">
+       SELECT * FROM "tb_resumes_label"
+         WHERE "resumes_card_id" = #{resumesCardId}
+         ORDER BY "priority" DESC
+    </select>
+    <select id="queryResumesLabelCount" resultType="int">
+        SELECT COUNT(*) FROM "tb_resumes_label"
+         WHERE "resumes_card_id" = #{resumesCardId}
+         ORDER BY "priority" DESC
+    </select>
+    <select id="queryResumesLabel" resultType="com.fxd.entity.ResumesLabel">
+        SELECT * FROM "tb_resumes_label"
+         WHERE "resumes_card_id" = #{resumesCardId}
+         ORDER BY "priority" DESC
+    </select>
+    <insert id="batchInsertResumesLabel" useGeneratedKeys="false" parameterType="java.util.List">
+        INSERT INTO "tb_resumes_label"
+        ("resumes_label_id","resumes_label_name",
+        "priority", "create_time", "last_edit_time", "resumes_card_id")
+        SELECT SEQ_TB_RESUMES_LABEL.NEXTVAL RESUMES_LABEL_ID,A.*
+        FROM(
+        <foreach collection="list" item="resumesLabel" index="index" separator=" UNION ALL">
+            SELECT
+            #{resumesLabel.resumesLabelName} "resumes_label_name",
+            #{resumesLabel.priority} "priority",
+            #{resumesLabel.createTime} "create_time",
+            #{resumesLabel.lastEditTime} "last_edit_time",
+            #{resumesLabel.resumesCard.resumesCardId} "resumes_card_id"
+            FROM dual
+        </foreach>
+        )A
+    </insert>
+</mapper>

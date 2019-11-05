@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--注意点：1、所有双引号中的字符串，不要出现多余的空格-->
+<mapper namespace="com.fxd.dao.ResumesInfoDao">
+    <resultMap id="resultMap" type="com.fxd.entity.ResumesInfo">
+        <id column="resumes_info_id" property="resumesInfoId"/>
+
+        <result column="resumes_info_name" property="resumesInfoName"/>
+        <result column="resumes_info_gender" property="resumesInfoGender"/>
+        <result column="resumes_info_age" property="resumesInfoAge"/>
+        <result column="born_year" property="bornYear"/>
+        <result column="born_city" property="bornCity"/>
+        <result column="resumes_info_education" property="resumesInfoEducation"/>
+        <result column="graduation_city" property="graduationCity"/>
+        <result column="contact_way" property="contactWay"/>
+        <result column="contact_addr" property="contactAddr"/>
+        <result column="work_time_limit" property="workTimeLimit"/>
+        <result column="work_experience" property="workExperience"/>
+        <result column="self_introduction" property="selfIntroduction"/>
+        <result column="resumes_user_img" property="resumesUserImg"/>
+        <result column="page_view" property="pageView"/>
+        <result column="edit_number" property="editNumber"/>
+        <result column="priority" property="priority"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="advice" property="advice"/>
+
+        <!--复合类型-->
+        <association column="user_id" property="personInfo" javaType="com.fxd.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+        </association>
+    </resultMap>
+    <select id="queryResumesInfoList" resultMap="resultMap" parameterType="Long">
+        SELECT
+        "ri"."resumes_info_id",
+        "ri"."resumes_info_name",
+        "ri"."resumes_info_gender",
+        "ri"."resumes_info_age",
+        "ri"."born_year",
+        "ri"."born_city",
+        "ri"."resumes_info_education",
+        "ri"."graduation_city",
+        "ri"."contact_way",
+        "ri"."contact_addr",
+        "ri"."work_time_limit",
+        "ri"."work_experience",
+        "ri"."self_introduction",
+        "ri"."resumes_user_img",
+        "ri"."page_view",
+        "ri"."edit_number",
+        "ri"."priority",
+        "ri"."create_time",
+        "ri"."last_edit_time",
+        "ri"."enable_status",
+        "ri"."advice",
+        "pi"."user_id",
+        "pi"."name"
+        FROM "tb_resumes_info" "ri","tb_person_info" "pi"
+        <where>
+            <if test="resumesInfoCondition.resumesInfoName != null">
+                AND "ri"."resumes_info_name" LIKE '%${resumesInfoCondition.resumesInfoName}%'
+            </if>
+            <if test="resumesInfoCondition.personInfo != null and
+                       resumesInfoCondition.personInfo.userId != null">
+                AND "pi"."user_id" = #{resumesInfoCondition.personInfo.userId}
+            </if>
+            AND "ri"."user_id" = "pi"."user_id"
+        </where>
+        ORDER BY
+        "ri"."priority" DESC
+    </select>
+    <!--获取整个简历 数据条数-->
+    <select id="queryResumesInfoCount" resultType="int">
+        SELECT COUNT(*)
+        FROM "tb_resumes_info" "ri","tb_person_info" "pi"
+        <where>
+            <if test="resumesInfoCondition.resumesInfoName != null">
+                AND "ri"."resumes_info_name" LIKE '%${resumesInfoCondition.resumesInfoName}%'
+            </if>
+            <if test="resumesInfoCondition.personInfo != null and
+                       resumesInfoCondition.personInfo.userId != null">
+                AND "pi"."user_id" = #{resumesInfoCondition.personInfo.userId}
+            </if>
+            AND "ri"."user_id" = "pi"."user_id"
+        </where>
+    </select>
+    <!--根据自身ID 获取数据-->
+    <select id="queryResumesInfoByInfoId" resultType="com.fxd.entity.ResumesInfo" parameterType="Long">
+    SELECT
+        "ri"."resumes_info_id",
+        "ri"."resumes_info_name",
+        "ri"."resumes_info_gender",
+        "ri"."resumes_info_age",
+        "ri"."born_year",
+        "ri"."born_city",
+        "ri"."resumes_info_education",
+        "ri"."graduation_city",
+        "ri"."contact_way",
+        "ri"."contact_addr",
+        "ri"."work_time_limit",
+        "ri"."work_experience",
+        "ri"."self_introduction",
+        "ri"."resumes_user_img",
+        "ri"."page_view",
+        "ri"."edit_number",
+        "ri"."priority",
+        "ri"."create_time",
+        "ri"."last_edit_time",
+        "ri"."enable_status",
+        "ri"."advice"
+    FROM
+        "tb_resumes_info" "ri"
+    WHERE
+        "ri"."resumes_info_id" = #{resumesInfo.resumes_info_id}
+    </select>
+    <!--根据用户ID 获取数据-->
+    <select id="queryResumesInfoId" resultMap="resultMap" parameterType="Long">
+        SELECT
+            "ri"."resumes_info_id",
+            "ri"."resumes_info_name",
+            "ri"."resumes_info_gender",
+            "ri"."resumes_info_age",
+            "ri"."born_year",
+            "ri"."born_city",
+            "ri"."resumes_info_education",
+            "ri"."graduation_city",
+            "ri"."contact_way",
+            "ri"."contact_addr",
+            "ri"."work_time_limit",
+            "ri"."work_experience",
+            "ri"."self_introduction",
+            "ri"."resumes_user_img",
+            "ri"."page_view",
+            "ri"."edit_number",
+            "ri"."priority",
+            "ri"."create_time",
+            "ri"."last_edit_time",
+            "ri"."enable_status",
+            "ri"."advice",
+            "pi"."user_id",
+            "pi"."name"
+        FROM "tb_resumes_info" "ri","tb_person_info" "pi"
+        WHERE
+            "ri"."user_id" = "pi"."user_id"
+        AND
+            "ri"."user_id" = #{personInfo.userId}
+    </select>
+    <!--新添加用户简历-->
+    <insert id="insertResumesInfo"
+            useGeneratedKeys="true"
+            keyColumn="resumes_info_id"
+            keyProperty="resumesInfoId">
+
+        <selectKey keyProperty="resumesInfoId"
+                   resultType="long"
+                   order="BEFORE">
+            select TB_RESUMES_INFO_SEQ.NEXTVAL from dual
+        </selectKey>
+
+            INSERT INTO "tb_resumes_info" ("resumes_info_id",
+            "user_id",
+            "resumes_info_name",
+            "resumes_info_gender",
+            "resumes_info_age",
+            "born_year",
+            "born_city",
+            "resumes_info_education",
+            "graduation_city",
+            "contact_way",
+            "contact_addr",
+            "work_time_limit",
+            "work_experience",
+            "self_introduction",
+            "resumes_user_img",
+            "page_view",
+            "edit_number",
+            "priority",
+            "create_time",
+            "last_edit_time",
+            "enable_status",
+            "advice")
+            VALUES
+            (${resumesInfoId},
+            #{personInfo.userId},
+            #{resumesInfoName},
+            #{resumesInfoGender},
+            #{resumesInfoAge},
+            #{bornYear},
+            #{bornCity},
+            #{resumesInfoEducation},
+            #{graduationCity},
+            #{contactWay},
+            #{contactAddr},
+            #{workTimeLimit},
+            #{workExperience},
+            #{selfIntroduction},
+            #{resumesUserImg},
+            #{pageView},
+            #{editNumber},
+            #{priority},
+            #{createTime},
+            #{lastEditTime},
+            #{enableStatus},
+            #{advice})
+   </insert>
+    <!--根据用户Id更新简历数据 动态生成SQL-->
+    <!--<if test="实体属性 != null">SQL字段=#{实体属性},</if>-->
+    <update id="updateResumesInfo" parameterType="com.fxd.entity.ResumesInfo">
+        UPDATE "tb_resumes_info"
+        <set>
+            <if test="resumesInfoName != null">"resumes_info_name"=#{resumesInfoName},</if>
+            <if test="resumesInfoGender != null">"resumes_info_gender"=#{resumesInfoGender},</if>
+            <if test="resumesInfoAge != null">"resumes_info_age"=#{resumesInfoAge},</if>
+            <if test="bornYear != null">"born_year"=#{bornYear},</if>
+            <if test="bornCity != null">"born_city"=#{bornCity},</if>
+            <if test="resumesInfoEducation != null">"resumes_info_education"=#{resumesInfoEducation},</if>
+            <if test="graduationCity != null">"graduation_city"=#{graduationCity},</if>
+            <if test="contactWay != null">"contact_way"=#{contactWay},</if>
+            <if test="contactAddr != null">"contact_addr"=#{contactAddr},</if>
+            <if test="workTimeLimit != null">"work_time_limit"=#{workTimeLimit},</if>
+            <if test="workExperience != null">"work_experience"=#{workExperience},</if>
+            <if test="selfIntroduction != null">"self_introduction"=#{selfIntroduction},</if>
+            <if test="resumesUserImg != null">"resumes_user_img"=#{resumesUserImg},</if>
+            <if test="pageView != null">"page_view"=#{pageView},</if>
+            <if test="editNumber != null">"edit_number"=#{editNumber},</if>
+            <if test="priority != null">"priority"=#{priority},</if>
+            <if test="createTime != null">"create_time"=#{createTime},</if>
+            <if test="lastEditTime != null">"last_edit_time"=#{lastEditTime},</if>
+            <if test="enableStatus != null">"enable_status"=#{enableStatus},</if>
+            <if test="advice != null">"advice"=#{advice}</if>
+        </set>
+        WHERE
+        "user_id"=#{personInfo.userId}
+    </update>
+</mapper>
+

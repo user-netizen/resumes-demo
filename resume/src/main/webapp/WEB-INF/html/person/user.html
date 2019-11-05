@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>用户管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+
+    <style>
+        .item-title-row a {
+            font-size: large;
+            color: black;
+            cursor: pointer;
+        }
+
+        .item-label-row a {
+            font-size: medium;
+        }
+    </style>
+</head>
+<body>
+<div class="no-page-group">
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="icon icon-me pull-left open-panel"></a>
+            <h1 class="title">用户</h1>
+        </header>
+
+        <!-- 工具栏 -->
+        <nav class="bar bar-tab">
+            <a id="home-page" class="tab-item  " href="index.html">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <!--            <a class="tab-item" href="#">-->
+            <!--                <span class="icon icon-star"></span>-->
+            <!--                <span class="tab-label">搜索</span>-->
+            <!--            </a>-->
+            <a id="mine-page" class="tab-item active" href="user.html">
+                <span class="icon icon-me"></span>
+                <span class="tab-label">我</span>
+            </a>
+        </nav>
+
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+            <div class="list-block media-list">
+                <div class="card">
+                    <a href="#" class="item-link item-content">
+                        <div class="item-media">
+                            <img id="img-head" class="placeholder" options="text=未登录!"
+                                 width="60">
+                        </div>
+                        <div class="item-inner">
+                            <div class="item-title-row">
+                                <div class="item-title"><span id="user-name">姓名</span></div>
+                                <div class="item-after"><span id="user-id" style="display: block"></span></div>
+                            </div>
+                            <div class="item-subtitle"></div>
+                            <div class="item-text"><span id="user-email"></span></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <div class="list-block">
+                        <a id="link-show" class="item-link item-content">
+                            <div class="item-media"><i class="icon icon-f7"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title">点击查看 个人</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-wrap"></div>
+
+        </div>
+    </div>
+
+    <!-- popup, panel 等放在这里 -->
+    <div class="panel-overlay"></div>
+    <!-- Left Panel with Reveal effect -->
+    <div class="panel panel-left panel-reveal">
+        <div class="content-block">
+            <div id="panel-wrap">
+                <p id="panel-title">你还没有登录</p>
+                <p><a href="/resume/home/login" class="login-panel">登录</a></p>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script src="https://cdn.bootcss.com/placeholder.js/3.1.0/placeholder.js"></script>
+
+<script type="text/javascript">
+    var user_result;
+
+    $(function () {
+        $.getJSON('/resume/front/sign', function (data) {
+            if (data.success) {
+                console.log(data);
+                //存在session 赋值
+                $('#user-id').text(data.data.id);
+                $('#user-name').text(data.data.name);
+                $('#user-email').text(data.data.email);
+                callback(data.data);
+
+                var opts = {
+                    size: '',
+                    bgcolor: '',
+                    color: '',
+                    text: '已登录',
+                    fstyle:'oblique',
+                    fweight: 'bold',
+                    fsize:'40',
+                    ffamily: 'consolas'
+                }
+                //get the base64 of the placeholder image.
+                //console.log(placeholder.getData(opts))
+                $('#img-head').attr("src",placeholder.getData(opts));
+            } else {
+                console.log('failed' + data.errMsg);
+                //不存在session 提示跳转的提示框
+                $.confirm('确定要登录吗?', function () {
+                    window.location.href = "/resume/home/login";
+                });
+            }
+        });
+    });
+
+
+    function callback(data) {
+        user_result = data;
+
+        handleLoginPanel(data);
+
+        getCardByUserId();
+
+        //编辑按钮
+        $('#link-show').click(function () {
+            $.toast(user_result.id);
+            $('#link-show').attr('href', '/resume/home/show?userId=' + user_result.id);
+        });
+    }
+
+    function handleLoginPanel(data) {
+        var html = `<p id="panel-title">你已经登录，<span style="color: white">` + data.name + `</span></p>
+                <p><a href="#" class="login-panel">退出</a></p>`;
+        $('#panel-wrap').html(html);
+    }
+
+    var cardByUserIdUrl = '/resume/front/getCardByUserId?userId=';
+
+
+    function getCardByUserId() {
+        console.log(user_result.id);
+
+        $.getJSON(cardByUserIdUrl + user_result.id, function (data) {
+            if (data.success) {
+                $.showIndicator();
+                setTimeout(function () {
+
+                    handleCardList(data.resumesCard);
+
+                }, 1000);
+            }
+        });
+
+        function handleCardList(resumesCard) {
+
+            var html = `<div class="card">
+                    <div class="card-header">
+                        <div class="list-block media-list">
+                            <div class="row item-link item-content">
+                                <div class="item-media">
+                                    <a href="#">
+                                        <img height="100" title="` + resumesCard.resumesInfo.resumesUserImg + `"
+                                             src="/resume/` + resumesCard.resumesInfo.resumesUserImg + `"
+                                             onerror="this.src=placeholder.getData({text: 'Image 404'})">
+                                    </a>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-title-row">
+                                        <a class="item-title" href="` + linkHref(resumesCard.resumesInfo.resumesInfoId) + `">
+                                        ` + resumesCard.resumesInfo.resumesInfoName + `-的简历</a>
+                                    </div>
+                                    <div class="item-label-row item-label-wrap">
+                                        <small>标签 </small>` + handleLabel(resumesCard.resumesCardId) + `
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-content-inner">` + resumesCard.resumesCardDesc + `</div>
+                    </div>
+                    <div class="card-footer">
+                        <span>` + timetrans(resumesCard.resumesInfo.lastEditTime) + `</span>
+                        <span>浏览量` + resumesCard.resumesInfo.pageView + `</span>
+                        <span class="icon icon-caret pull-right create-actions"></span>
+                    </div>
+                </div>`;
+
+            $.hideIndicator();
+            $('.card-wrap').html(html);
+        }
+
+        //<a> 链接单独处理
+        function linkHref(resumesInfoId) {
+            return "/resume/home/show?infoId=" + resumesInfoId;
+        }
+
+        /**
+         * 获取数据 条件resumesCardId
+         * @param resumesCardId
+         * @returns {string}
+         */
+        function handleLabel(resumesCardId) {
+            var labelListUrl = '/resume/front/getLabelByCardId';
+            var labelStr = '';
+            //查询数据 条件resumesCardId
+            $.ajax({
+                dataType: 'json',
+                url: labelListUrl + '?id=' + resumesCardId,
+                async: false,//这里选择异步为false，那么这个程序执行到这里的时候会暂停，等待
+                             //数据加载完成后才继续执行
+                success: function (data) {
+                    if (data.resumesLabelList != null) {
+                        data.resumesLabelList.map(function (item, index) {
+                            labelStr += `<a class="item-label">` + item.resumesLabelName + `</a> `;
+                        });
+                    }
+                }
+            });
+            return labelStr;
+        }
+    }
+</script>
+<script>
+    function timetrans(date) {
+        var date = new Date(date);//如果date为13位不需要乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return Y + M + D + h + m + s;
+    }
+</script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<script>
+    $.init();
+</script>
+</body>
+</html>

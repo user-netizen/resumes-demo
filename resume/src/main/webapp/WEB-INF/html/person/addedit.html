@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>添加编辑</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+</head>
+<body>
+<div class="no-page-group">
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back" href="/index.html">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class="title">添加编辑</h1>
+        </header>
+        <!--这是Card添加修改页面-->
+        <div id="card-content" class="content" style="display: none">
+            <div class="list-block">
+                <ul>
+                    <li>
+                        <div class="item-content align-top">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">卡片描述</div>
+                                <div class="item-input">
+                                    <textarea id="card-des"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-50"><a id="next-card" href="#" class="button button-big button-fill">下一步</a></div>
+                    <div class="col-50"><a id="submit-card" href="#"
+                                           class="button button-big button-fill button-success">提交</a></div>
+                </div>
+            </div>
+        </div>
+        <!--这是Label添加页面-->
+        <div id="label-content" class="content" style="display: none">
+            <div class="list-block">
+                <ul>
+                    <li class="row item-content">
+                        <div class="col-40">标签</div>
+                        <div class="col-50">优先级</div>
+                        <div class="col-40">操作</div>
+                    </li>
+
+                </ul>
+                <!--add-->
+                <ul class="category-wrap">
+                    <!--动态-->
+
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-50"><a href="#" id="new" class="button button-big button-fill">添加</a></div>
+                    <div class="col-50"><a id="submit-label" href="#"
+                                           class="button button-big button-fill button-success">提交</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 这里是页面内容区 -->
+        <div id="info-content" class="content">
+
+            <div class="list-block">
+                <ul>
+                    <!-- Text inputs -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">姓名</div>
+                                <div class="item-input">
+                                    <input id="info-name" type="text" placeholder="你的名字">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">性别</div>
+                                <div class="item-input">
+                                    <input id="info-gender" type="text" placeholder="你的性别">
+                                    <!--                                    <select>-->
+                                    <!--                                        <option>男</option>-->
+                                    <!--                                        <option>女</option>-->
+                                    <!--                                    </select>-->
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">年龄</div>
+                                <div class="item-input">
+                                    <input id="info-age" type="text" placeholder="age">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">出身年</div>
+                                <div class="item-input">
+                                    <input id="born-year" type="text" placeholder="1000-3000">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">出身地</div>
+                                <input id="born-city" type="text" placeholder="你的出身地">
+                                <!--                                <div class="item-input">-->
+                                <!--                                    <select>-->
+                                <!--                                        <option>江苏</option>-->
+                                <!--                                        <option>湖南</option>-->
+                                <!--                                    </select>-->
+                                <!--                                </div>-->
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">学历</div>
+                                <div class="item-input">
+                                    <div class="item-input">
+                                        <input id="info-education" type="text" placeholder="你的学历">
+                                        <!--                                        <select>-->
+                                        <!--                                            <option>中专</option>-->
+                                        <!--                                            <option>大专</option>-->
+                                        <!--                                            <option selected>本科</option>-->
+                                        <!--                                            <option>博士</option>-->
+                                        <!--                                        </select>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">毕业城市</div>
+                                <div class="item-input">
+                                    <div class="item-input">
+                                        <input id="graduation-city" type="text" placeholder="你的毕业城市">
+                                        <!--                                        <select>-->
+                                        <!--                                            <option>无锡</option>-->
+                                        <!--                                            <option>苏州</option>-->
+                                        <!--                                        </select>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">联系方式</div>
+                                <div class="item-input">
+                                    <input id="contact-way" type="text" placeholder="你的邮箱、电话">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">联系地址</div>
+                                <div class="item-input">
+                                    <input id="contact-addr" type="text" placeholder="你的联系地址">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">工作年限</div>
+                                <div class="item-input">
+                                    <div class="item-input">
+                                        <input id="workTime-limit" type="text" placeholder="你的工作年限">
+                                        <!--                                        <select>-->
+                                        <!--                                            <option>无经验</option>-->
+                                        <!--                                            <option>实习</option>-->
+                                        <!--                                            <option>1年</option>-->
+                                        <!--                                            <option>2-3年</option>-->
+                                        <!--                                            <option>3-4年</option>-->
+                                        <!--                                            <option>5年以上</option>-->
+                                        <!--                                        </select>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!--工作经历-->
+                    <li class="align-top">
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">工作经历</div>
+                                <div class="item-input">
+                                    <textarea id="info-work-ex"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="align-top">
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">自我简介</div>
+                                <div class="item-input">
+                                    <div class="item-input">
+                                        <textarea id="info-self-intro"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">头像</div>
+                                <div class="item-input">
+                                    <input id="info-img" type="file">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-50"><a href="#" id="next-info" class="button button-big button-fill">下一步</a></div>
+                    <div class="col-50"><a id="submit-info" href="#"
+                                           class="button button-big button-fill button-success">提交</a></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type="text/javascript">
+
+    $(function () {
+        $.getJSON('/resume/front/sign', function (data) {
+            if (data.success) {
+                //存在session 赋值
+                console.log(data.data);
+            } else {
+                console.log('failed' + data.errMsg);
+
+                //不存在session 提示跳转的提示框
+                btn_model('没有登录不可编辑?', '', '返回', '去登录');
+            }
+        });
+    });
+
+    function btnAction1() {
+        window.location.replace("/resume/home/index");
+    }
+
+    function btnAction2() {
+        window.location.replace("/resume/home/login");
+    }
+
+    function btn_model(title, description, btnName1, btnName2) {
+        $.modal({
+            title: title,
+            text: description,
+            buttons: [
+                {
+                    text: btnName1,
+                    onClick: function () {
+                        btnAction1();
+                    }
+                },
+                {
+                    text: btnName2,
+                    bold: true,
+                    onClick: function () {
+                        btnAction2();
+                    }
+                },
+            ]
+        });
+    }
+</script>
+<script>
+    /**
+     * 传的userid需要与当前的session中用户登录情况对比判断
+     */
+    //获取url
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)")
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURIComponent(r[2]);
+        }
+        return '';
+    }
+
+    var userId = getQueryString('userId');
+    var isId = userId ? true : false;
+
+    var get_info_data_url = '';
+    if (isId) {
+        get_info_data_url = '/resume/front/getInfoByUserId?id=' + userId;
+    } else {
+        //重定向
+        window.location.replace('/resume/home/index');
+    }
+
+    getInfoData();
+
+    function getInfoData() {
+
+        $.getJSON(get_info_data_url, function (data) {
+            //成功 有数据返回
+            if (data.success) {
+                if (isId) {
+                    handleUserInfoData(data.data);
+                    console.log(data);
+                }
+            }
+            //失败 返回-1003
+            if (data.errMsg == -1003) {
+                //数据为空：新添加数据
+                newAddOrModifyInfo(data);
+                return;
+            }
+        });
+    }
+
+    function handleUserInfoData(data) {
+        console.log(data);
+
+        //处理有数据的情况
+        handleHaveData(data);
+        //更新操作
+        newAddOrModifyInfo(data);
+    }
+
+    //处理有数据的情况
+    function handleHaveData(data) {
+        //获取数据，赋值控件
+        $('#info-name').val(data.resumesInfoName);
+        $('#info-work-ex').val(data.workExperience);
+        $('#info-self-intro').val(data.selfIntroduction);
+        $('#info-gender').val(data.resumesInfoGender);
+        $('#info-age').val(data.resumesInfoAge);
+        $('#born-year').val(data.bornYear);
+        $('#born-city').val(data.bornCity);
+        $('#info-education').val(data.resumesInfoEducation);
+        $('#graduation-city').val(data.graduationCity);
+        $('#contact-way').val(data.contactWay);
+        $('#contact-addr').val(data.contactAddr);
+        $('#workTime-limit').val(data.workTimeLimit);
+    }
+
+    function newAddOrModifyInfo(data) {
+        console.log(data);
+
+        var add_url = '/resume/front/addInfo';
+        var modify_info_url = '/resume/front/modifyInfo';
+        var modify_img_url = '/resume/front/modifyInfoImg';
+        var is_or_url = (data.errMsg == -1003) ? "add" : "modify";
+
+        console.log(is_or_url);
+
+        $('#submit-info').click(function () {
+            var info = {};
+            console.log(is_or_url);
+            // info.resumesInfoId = 5;
+
+            info.personInfo = {userId: userId};
+            info.resumesInfoName = $('#info-name').val();
+            info.resumesInfoGender = $('#info-gender').val();
+            info.resumesInfoAge = $('#info-age').val();
+            info.bornYear = $('#born-year').val();
+            info.bornCity = $('#born-city').val();
+            info.resumesInfoEducation = $('#info-education').val();
+            info.graduationCity = $('#graduation-city').val();
+            info.contactWay = $('#contact-way').val();
+            info.contactAddr = $('#contact-addr').val();
+            info.workTimeLimit = $('#workTime-limit').val();
+            info.workExperience = $('#info-work-ex').val();
+            info.selfIntroduction = $('#info-self-intro').val();
+            // info.pageView = 1;
+            // info.editNumber = 1;
+            var infoImg = $('#info-img').get(0).files[0];
+
+            var formData = new FormData();
+
+            formData.append('infoStr', JSON.stringify(info));
+            formData.append('infoImg', infoImg);
+
+            console.log(formData.get('infoStr'));
+
+            if (is_or_url == "add") {
+                if (!infoImg){
+                    $.toast('图片不为空');
+                    return;
+                }
+                is_or_url = add_url;
+            } else {
+                if (is_or_url == "modify" && !infoImg) {
+                    is_or_url = modify_info_url;
+                    console.log(formData.get('infoImg'));
+                } else {
+                    is_or_url = modify_img_url;
+                    console.log(formData.get('infoImg'));
+                }
+            }
+
+            console.log(is_or_url);
+            $.ajax({
+                url: is_or_url,
+                type: 'POST',
+                data: formData,
+                contentType: false, //禁止设置请求类型
+                processData: false, //禁止jquery对DAta数据的处理,默认会处理
+                success: function (data) {
+                    if (data.success) {
+                        $.toast('success');
+                        //隐藏 进行下一步
+                        $('#info-content').css("display", "none");
+                        $('#card-content').css("display", "block");
+
+                        // 先check 当前ID 有数据，并返回
+                        check_user_info(1);
+                    } else {
+                        $.toast('failed' + data.errMsg);
+                    }
+                }
+            });
+
+        });
+    }
+
+    /**
+     * 更新的
+     * 条件用户ID
+     * 1.将数据库中用户ID相关的info数据获取到 赋给div
+     * 2.重新获取info数据，交给后台处理
+     */
+
+    /**
+     * 新添加的，条件用户ID
+     * 判断数据库中true更新 OR false添加
+     */
+
+    function check_user_info(keys) {
+        if (keys == 0) {
+            var name = $('#info-name').val();
+            if (name == '') {
+                $('#info-content').css("display", "block");
+                $('#card-content').css("display", "none");
+                console.log(keys);
+                return;
+            }
+        }
+        $.getJSON(get_info_data_url, function (data) {
+            if (data.success) {
+                //获取到infoID 和 用户ID
+                var resumesInfoId = data.data.resumesInfoId;
+                var userId = data.data.personInfo.userId;
+
+                //check 用户中有card 就赋值控件
+                var check_user_card_url = '/resume/front/getCardByUserId?userId=' + userId;
+                check_user_card(check_user_card_url, resumesInfoId, userId);
+            }
+
+            function check_user_card(check_user_card_url, resumesInfoId, userId) {
+                console.log(keys);
+
+                $.getJSON(check_user_card_url, function (data) {
+                    console.log(data);
+
+                    if (data.errMsg == -1003) {
+                        //如果不存在 添加
+                        var url = '/resume/front/addCard';
+                        handleUserInfoDataByCard(url, resumesInfoId, userId);
+                    }
+                    if (data.success) {
+                        //如果存在 更新
+                        var url = '/resume/front/modifyCard';
+                        $('#card-des').val(data.resumesCard.resumesCardDesc);
+                        handleUserInfoDataByCard(url, resumesInfoId, userId);
+                    }
+                });
+            }
+
+        });
+    }
+
+
+    // 提交 用户ID infoID 描述
+    function handleUserInfoDataByCard(url, resumesInfoId, userId) {
+
+        var formData = new FormData();
+        var card = {};
+
+        $('#submit-card').click(function () {
+
+            card.personInfo = {userId: userId};
+            card.resumesInfo = {resumesInfoId: resumesInfoId};
+            card.resumesCardDesc = $('#card-des').val();
+
+            formData.append('cardStr', JSON.stringify(card));
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                contentType: false, //禁止设置请求类型
+                processData: false, //禁止jquery对DAta数据的处理,默认会处理
+                success: function (data) {
+                    if (data.success) {
+                        $.toast('success');
+                        //隐藏 进行下一步
+                        $('#info-content').css("display", "none");
+                        $('#card-content').css("display", "none");
+                        $('#label-content').css("display", "block");
+
+                        // 先check 当前ID 有数据，并返回
+                        check_user_card(1);
+                    } else {
+                        $.toast('failed' + data.errMsg);
+                    }
+                }
+            });
+        });
+    }
+
+    function check_user_card(keys) {
+        if (keys == 0) {
+            var name = $('#card-des').val();
+            if (name == '') {
+                $('#info-content').css("display", "none");
+                $('#card-content').css("display", "block");
+                $('#label-content').css("display", "none");
+                console.log(keys);
+                return;
+            }
+        }
+
+        var check_user_card_url = '/resume/front/getCardByUserId?userId=' + userId;
+
+        $.getJSON(check_user_card_url, function (data) {
+            console.log(data);
+            if (data.errMsg == -1003) {
+                //如果不存在 添加
+            }
+
+            if (data.success) {
+                //如果存在返回cardId 更新
+                var resumesCardId = data.resumesCard.resumesCardId;
+                var url = '/resume/front/addBatchLabel';
+
+                handleUserInfoDataLabel(url, resumesCardId);
+            }
+        });
+    }
+
+
+    function handleUserInfoDataLabel(url, resumesCardId) {
+        $('#submit-label').click(function () {
+            var tempArr = $('.temp');
+            var labelList = [];
+            tempArr.map(function (index, item) {
+                var tempObj = {};
+                tempObj.resumesLabelName = $(item).find('.category').val();
+                tempObj.priority = $(item).find('.priority').val();
+                tempObj.resumesCard = {resumesCardId: resumesCardId};
+                if (tempObj.resumesLabelName && tempObj.priority && tempObj.resumesCard) {
+                    labelList.push(tempObj);
+                }
+            });
+            console.log(url);
+            console.log(labelList);
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(labelList),
+                contentType: 'application/json',
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    if (data.success) {
+                        $.toast('success');
+                        window.location.replace("/resume/home/user");
+                    } else {
+                        $.toast('failed' + data.errMsg);
+                    }
+                }
+            });
+        });
+    }
+</script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<script>
+    $.init();
+    $('#new').click(function () {
+        var tempHtml = '<li class="row no-gutter item-content item-inner temp">\n' +
+            '<div class="col-40"><input class="item-input category" type="text" placeholder="新标签"></div>\n' +
+            '<div class="col-50"><input class="category-input priority" type="number" placeholder="设置优先等级"></div>\n' +
+            '<div class="col-40"><a href="#" class="button delete" data-id="">待定</a></div>\n' +
+            '</li>';
+        $('.category-wrap').append(tempHtml);
+    });
+
+    $('#next-info').click(function () {
+        $('#info-content').css("display", "none");
+        $('#card-content').css("display", "block");
+
+        // 先check 当前ID 有数据，并返回
+        check_user_info(0);
+    });
+
+    $('#next-card').click(function () {
+        $('#info-content').css("display", "none");
+        $('#card-content').css("display", "none");
+        $('#label-content').css("display", "block");
+
+        // 先check 当前ID 有数据，并返回
+        check_user_card(0);
+    });
+</script>
+</body>
+</html>

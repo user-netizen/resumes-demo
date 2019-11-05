@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxd.dao.ResumesCardDao">
+    <resultMap id="resultMap" type="com.fxd.entity.ResumesCard">
+        <id column="resumes_card_id" property="resumesCardId"/>
+        <result column="resumes_card_desc" property="resumesCardDesc"/>
+
+        <association column="user_id" property="personInfo" javaType="com.fxd.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+        </association>
+        <association column="resumes_info_id" property="resumesInfo" javaType="com.fxd.entity.ResumesInfo">
+            <id column="resumes_info_id" property="resumesInfoId"/>
+
+            <result column="resumes_info_name" property="resumesInfoName"/>
+            <result column="resumes_info_gender" property="resumesInfoGender"/>
+            <result column="resumes_info_age" property="resumesInfoAge"/>
+            <result column="born_year" property="bornYear"/>
+            <result column="born_city" property="bornCity"/>
+            <result column="resumes_info_education" property="resumesInfoEducation"/>
+            <result column="graduation_city" property="graduationCity"/>
+            <result column="contact_way" property="contactWay"/>
+            <result column="contact_addr" property="contactAddr"/>
+            <result column="work_time_limit" property="workTimeLimit"/>
+            <result column="work_experience" property="workExperience"/>
+            <result column="self_introduction" property="selfIntroduction"/>
+            <result column="resumes_user_img" property="resumesUserImg"/>
+            <result column="page_view" property="pageView"/>
+            <result column="edit_number" property="editNumber"/>
+            <result column="priority" property="priority"/>
+            <result column="create_time" property="createTime"/>
+            <result column="last_edit_time" property="lastEditTime"/>
+            <result column="enable_status" property="enableStatus"/>
+            <result column="advice" property="advice"/>
+        </association>
+    </resultMap>
+    <select id="queryAllResumesCardList" resultMap="resultMap" parameterType="Long">
+        SELECT * FROM
+        ( SELECT
+        "rc"."resumes_card_id",
+        "rc"."user_id",
+        "rc"."resumes_card_desc",
+        "pi"."name",
+        "ri"."resumes_info_id",
+        "ri"."resumes_info_name",
+        "ri"."resumes_info_gender",
+        "ri"."resumes_info_age",
+        "ri"."born_year",
+        "ri"."born_city",
+        "ri"."resumes_info_education",
+        "ri"."graduation_city",
+        "ri"."contact_way",
+        "ri"."contact_addr",
+        "ri"."work_time_limit",
+        "ri"."work_experience",
+        "ri"."self_introduction",
+        "ri"."resumes_user_img",
+        "ri"."page_view",
+        "ri"."edit_number",
+        "ri"."priority",
+        "ri"."create_time",
+        "ri"."last_edit_time",
+        "ri"."enable_status",
+        "ri"."advice",
+        ROWNUM rn
+        FROM
+        "tb_resumes_card" "rc",
+        "tb_person_info" "pi",
+        "tb_resumes_info" "ri"
+        <where>
+            <if test="resumesCardCondition.resumesInfo.resumesInfoName != null">
+                AND "ri"."resumes_info_name" LIKE '%${resumesCardCondition.resumesInfo.resumesInfoName}%'
+            </if>
+            AND "rc"."resumes_info_id" = "ri"."resumes_info_id"
+            AND "rc"."user_id" = "pi"."user_id"
+            AND ROWNUM &lt;= ${pageSize}
+            ORDER BY
+            "ri"."priority" DESC
+        </where>
+        )
+        WHERE
+        rn &gt;= ${rowIndex}
+    </select>
+    <select id="queryResumesCardCount" resultType="int">
+        SELECT COUNT(*)
+        FROM
+        "tb_resumes_card" "rc",
+        "tb_person_info" "pi",
+        "tb_resumes_info" "ri"
+        <where>
+            <if test="resumesCardCondition.resumesInfo.resumesInfoName != null">
+                AND "ri"."resumes_info_name" LIKE '%${resumesCardCondition.resumesInfo.resumesInfoName}%'
+            </if>
+            AND "rc"."resumes_info_id" = "ri"."resumes_info_id"
+            AND "rc"."user_id" = "pi"."user_id"
+        </where>
+    </select>
+    <select id="queryUserIdResumesCard" parameterType="Long" resultMap="resultMap">
+        SELECT
+        "rc"."resumes_card_id",
+        "rc"."user_id",
+        "rc"."resumes_card_desc",
+        "pi"."name",
+        "ri"."resumes_info_id",
+        "ri"."resumes_info_name",
+        "ri"."resumes_info_gender",
+        "ri"."resumes_info_age",
+        "ri"."born_year",
+        "ri"."born_city",
+        "ri"."resumes_info_education",
+        "ri"."graduation_city",
+        "ri"."contact_way",
+        "ri"."contact_addr",
+        "ri"."work_time_limit",
+        "ri"."work_experience",
+        "ri"."self_introduction",
+        "ri"."resumes_user_img",
+        "ri"."page_view",
+        "ri"."edit_number",
+        "ri"."priority",
+        "ri"."create_time",
+        "ri"."last_edit_time",
+        "ri"."enable_status",
+        "ri"."advice"
+        FROM
+        "tb_resumes_card" "rc",
+        "tb_person_info" "pi",
+        "tb_resumes_info" "ri",
+        "tb_resumes_label" "rl"
+        WHERE
+        "rc"."user_id" = "pi"."user_id"
+        AND "rc"."resumes_info_id" = "ri"."resumes_info_id"
+        AND "rc"."user_id" = #{personInfo.userId}
+    </select>
+    <insert id="insertResumesCard"
+            useGeneratedKeys="true"
+            keyColumn="resumes_card_id"
+            keyProperty="resumesCardId">
+
+        <selectKey keyProperty="resumesCardId"
+                   resultType="long"
+                   order="BEFORE">
+            select TB_RESUMES_CARD_SEQ.NEXTVAL from dual
+        </selectKey>
+
+        INSERT INTO "tb_resumes_card" ("resumes_card_id","user_id","resumes_info_id","resumes_card_desc")
+        VALUES
+        (${resumesCardId},#{personInfo.userId},#{resumesInfo.resumesInfoId},#{resumesCardDesc})
+    </insert>
+    <update id="updateResumesCard" parameterType="com.fxd.entity.ResumesCard">
+        UPDATE "tb_resumes_card"
+        <set>
+            <if test="personInfo != null">"user_id"=#{personInfo.userId},</if>
+            <if test="resumesInfo != null">"resumes_info_id"=#{resumesInfo.resumesInfoId},</if>
+            <if test="resumesCardDesc != null">"resumes_card_desc"=#{resumesCardDesc}</if>
+        </set>
+        WHERE "user_id"=#{personInfo.userId}
+    </update>
+</mapper>

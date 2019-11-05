@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+</head>
+<body>
+<header class="bar bar-nav">
+    <a class="button button-link button-nav pull-left back" href="/resume/home/user">
+        <span class="icon icon-left"></span>
+        返回
+    </a>
+    <h1 class="title">登录</h1>
+</header>
+
+<div id="login-content" class="content">
+    <div class="list-block">
+        <ul>
+            <!-- Text inputs -->
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-email"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">邮箱</div>
+                        <div class="item-input">
+                            <input id="login-email" type="email" placeholder="输入邮箱">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-password"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">密码</div>
+                        <div class="item-input">
+                            <input id="login-pwd" type="password" placeholder="输入密码" class="">
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="content-block">
+        <div class="row"><a id="sign-in" class="col-100" href="#">还未注册，点这！</a></div>
+        <div class="row">
+            <div class="col-100"><a id="login-submit" href="#" class="button button-big button-fill">登录</a></div>
+        </div>
+    </div>
+</div>
+
+<div id="register-content" class="content" style="display: none">
+    <div class="list-block">
+        <ul>
+            <!-- Text inputs -->
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-name"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">姓名</div>
+                        <div class="item-input">
+                            <input id="reg-name" type="text" placeholder="你的姓名">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-email"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">邮箱</div>
+                        <div class="item-input">
+                            <input id="reg-email" type="email" placeholder="你的邮箱">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-password"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">密码</div>
+                        <div class="item-input">
+                            <input id="reg-pwd" type="password" placeholder="你的密码" class="">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div class="item-content">
+                    <div class="item-media"><i class="icon icon-form-name"></i></div>
+                    <div class="item-inner">
+                        <div class="item-title label">性别</div>
+                        <div class="item-input">
+                            <input id="reg-gender" type="text" placeholder="你的性别">
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="content-block">
+        <div class="row">
+            <div class="col-50"><a id="cancel" href="#" class="button button-big button-fill button-danger">取消</a></div>
+            <div class="col-50"><a id="reg-submit" href="#" class="button button-big button-fill button-success">提交</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script>
+    $(function () {
+        $.getJSON('/resume/front/sign', function (data) {
+            if (data.success) {
+                $.toast('success' + data.data);
+                console.log(data.data);
+                //存在session 跳传
+                window.location.replace("/resume/home/index");
+            } else {
+                console.log('failed' + data.errMsg);
+                //提示重新登录
+            }
+        });
+
+    })
+</script>
+<script>
+    $('#reg-submit').click(function () {
+
+        var name = $('#reg-name').val();
+        var gender = $('#reg-gender').val();
+        var email = $('#reg-email').val();
+        var pwd = $('#reg-pwd').val();
+        if (name == '' || gender == '' || email == '' || pwd == '') {
+            $.toast('信息不能为空');
+            return;
+        }
+
+        $.ajax({
+            url: '/resume/front/register?email=' + email + '&pwd=' + pwd + '&name=' + name + '&gender=' + gender,
+            type: "GET",
+            data: null,
+            contentType: 'application/json',
+            processData: false,
+            cache: false,
+            success: function (data) {
+                if (data.success) {
+                    $.toast('success');
+                    //页面跳转
+                    window.location.replace("/resume/home/index");
+                } else {
+                    $.toast('failed' + data.errMsg);
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $('#login-submit').click(function () {
+        var email = $('#login-email').val();
+        var pwd = $('#login-pwd').val();
+        if (email == '' || pwd == '') {
+            $.toast('信息不能为空');
+            return;
+        }
+
+        $.ajax({
+            url: '/resume/front/login?email=' + email + '&pwd=' + pwd,
+            type: "GET",
+            data: null,
+            contentType: 'application/json',
+            processData: false,
+            cache: false,
+            success: function (data) {
+                if (data.success) {
+                    $.toast('success');
+                    //跳回用户页
+                    window.location.replace("/resume/home/user");
+                } else {
+                    $.toast('failed' + data.errMsg);
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $('#sign-in').click(function () {
+        $('#login-content').css('display', 'none');
+        $('#register-content').css('display', 'block');
+    });
+
+    $('#cancel').click(function () {
+        $('#login-content').css('display', 'block');
+        $('#register-content').css('display', 'none');
+    });
+</script>
+</body>
+</html>

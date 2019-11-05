@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxd.dao.LocalAuthDao">
+    <resultMap id="resultMap" type="com.fxd.entity.LocalAuth">
+        <id column="local_auth_id" property="localAuthId"/>
+        <result column="password" property="password"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <association column="user_id" property="personInfo" javaType="com.fxd.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+            <result column="email" property="email"/>
+            <result column="gender" property="gender"/>
+        </association>
+    </resultMap>
+    <select id="queryLocalAuthByUserId"
+            parameterType="Long" resultMap="resultMap">
+        SELECT
+        "la"."local_auth_id",
+        "la"."user_id",
+        "la"."username",
+        "la"."password",
+        "la"."create_time",
+        "la"."last_edit_time",
+        "pi"."user_id",
+        "pi"."name",
+        "pi"."profile_img",
+        "pi"."email",
+        "pi"."gender",
+        "pi"."enable_status",
+        "pi"."user_type"
+        FROM "tb_local_auth" "la","tb_person_info" "pi"
+        WHERE
+        "la"."user_id" = "pi"."user_id"
+        AND
+         "la"."user_id" = #{personInfo.userId}
+    </select>
+
+    <insert id="insertLocalAuth"
+                     useGeneratedKeys="true"
+                     keyColumn="local_auth_id"
+                     keyProperty="localAuthId">
+
+    <selectKey keyProperty="localAuthId"
+               resultType="long"
+               order="BEFORE">
+        select TB_LOCAL_AUTH_SEQ.NEXTVAL from dual
+    </selectKey>
+
+    INSERT INTO "tb_local_auth" ("local_auth_id","user_id","username","password","create_time","last_edit_time")
+    VALUES
+    (${localAuthId},
+    #{personInfo.userId},
+    #{username},
+    #{password},
+    #{createTime},
+    #{lastEditTime})
+</insert>
+</mapper>

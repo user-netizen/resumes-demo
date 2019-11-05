@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>用户管理</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+
+    <style>
+        .grid-wrap .row {
+            text-align: center;
+            background-color: #FFFFFF;
+        }
+
+        .grid-wrap .row + .row {
+            margin-top: 0.01rem;
+        }
+
+        .grid-wrap .row > [class*=col-] {
+            /*border: 1px solid #ddd;*/
+        }
+    </style>
+</head>
+<body>
+<div class="no-page-group">
+    <div class="page">
+        <!-- 标题栏 -->
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back">
+                <span class="icon icon-left"></span>
+                返回
+            </a>
+            <h1 class="title">个人秀</h1>
+            <a id="edit-add" class="button button-link button-nav pull-right" href="#">
+                编辑<span class="icon icon-right"></span>
+            </a>
+        </header>
+
+        <!-- 这里是页面内容区 -->
+        <div class="content">
+            <div class="content-padded grid-wrap">
+                <div class="row no-gutter">
+                    <div class="col-33"></div>
+                    <div class="col-66"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script src="https://cdn.bootcss.com/placeholder.js/3.1.0/placeholder.js"></script>
+<!-- 默认必须要执行$.init(),实际业务里一般不会在HTML文档里执行，通常是在业务页面代码的最后执行 -->
+<script>
+
+    //获取url
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)")
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return decodeURIComponent(r[2]);
+        }
+        return '';
+    }
+
+    var id = getQueryString('infoId');
+    var userId = getQueryString('userId');
+    var isEdit = userId ? true : false;
+    var isId = id ? true : false;
+
+    if (!isId && !isEdit) {
+        $('#edit-add').hide();
+
+        console.log("错误什么都没有，要跳转")
+        window.location.replace("/resume/home/index");
+
+    }
+
+    var get_info_data_url = '';
+    if (isEdit) {
+        get_info_data_url = '/resume/front/getInfoByUserId?id=' + userId;
+
+        check_user_info();
+    }
+    if (isId) {
+        get_info_data_url = '/resume/front/getInfoByInfoId?infoId=' + id;
+        $('#edit-add').hide();
+    }
+    console.log(get_info_data_url);
+
+    function check_user_info() {
+        $.getJSON('/resume/front/sign', function (data) {
+            if (data.success) {
+                $.toast('success');
+                //存在session 赋值
+                console.log(data.data);
+            } else {
+                console.log('failed' + data.errMsg);
+                //不存在session 提示跳转的提示框
+                window.location.replace("/resume/home/index");
+            }
+        });
+    }
+
+    getInfoData();
+
+    function getInfoData() {
+        $.getJSON(get_info_data_url, function (data) {
+            if (data.success) {
+                if (isEdit) {
+                    handleUserInfoData(data.data);
+
+                    $('#edit-add').click(function () {
+                        $.toast(userId);
+                        $('#edit-add').attr('href', '/resume/home/add?userId=' + userId);
+                    });
+                } else {
+                    handleInfoData(data.data);
+                }
+            } else {
+                if (isEdit) {
+                    if (data.errMsg == -1003) {
+                        //跳转editadd
+                        $.toast('failed handleUserInfoData信息为空' + data.errMsg);
+                        $('#edit-add').show();
+
+                        $('#edit-add').click(function () {
+                            $.toast(userId);
+                            $('#edit-add').attr('href', '/resume/home/add?userId=' + userId);
+                        });
+
+                        setTimeout(function () {
+                            $.confirm('信息为空，准备跳转编辑.....', function () {
+                                window.location.replace('/resume/home/add?userId=' + userId);
+                            });
+                        }, 1000);
+                    }
+                } else {
+                    if (data.errMsg == -1003) {
+                        //跳转index
+                        $.toast('failed handleInfoData信息为空' + data.errMsg);
+                    }
+                }
+            }
+        });
+    }
+
+    function handleUserInfoData(data) {
+        var html = '';
+
+        console.log(data);
+
+        Object.keys(data).forEach(function (key) {
+            // console.log(key, data[key]);
+            var Cts = "personInfo,resumesInfoId,enableStatus,createTime,lastEditTime,priority,advice";
+            if (Cts.indexOf(key) >= 0) {
+                html += '';
+            } else if (key == 'resumesUserImg') {
+                html += `<div class="content-block-title ">` + handleInfoTitle(key) + `</div>
+                            <div class="card">
+                            <div class="card-content">
+                            <div class="card-content-inner">
+                            <img src="/resume/` + data[key] + `" alt="" width="100%"
+                            onerror="this.src=placeholder.getData({text: 'Image 404'})">
+                                </div>
+                            </div>
+                        </div>`;
+            } else {
+                html += `<div class="content-block-title ">` + handleInfoTitle(key) + `</div>
+                            <div class="card">
+                            <div class="card-content">
+                            <div class="card-content-inner" style="word-wrap:break-word;
+                                word-break:break-all;
+                                overflow: hidden;">` + data[key] + `</div>
+                            </div>
+                        </div>`;
+            }
+
+        });
+
+        $('.grid-wrap').html(html);
+
+    }
+
+    function handleInfoTitle(skey) {
+        //数组返回
+        var obj = {
+            "resumesInfoName": "姓名",
+            "personInfo": "隐藏",
+            "resumesUserImg": "图片",
+            "resumesInfoGender": "性别",
+            "resumesInfoEducation": "学历",
+            "resumesInfoAge": "年龄",
+            "priority": "优先级",
+            "pageView": "浏览量",
+            "lastEditTime": "最后修改时间",
+            "graduationCity": "毕业城市",
+            "enableStatus": "状态",
+            "editNumber": "编辑次数",
+            "createTime": "创建时间",
+            "contactWay": "联系方式",
+            "contactAddr": "联系地址",
+            "bornYear": "出生年",
+            "bornCity": "出生城市",
+            "resumesInfoId": "ID",
+            "workExperience": "工作经历",
+            "selfIntroduction": "工作简介",
+            "workTimeLimit": "工作年限",
+            "advice": "审核",
+            "email": "邮箱"
+        };
+
+        var objStr;
+        Object.keys(obj).forEach(function (key) {
+            if (skey == key) {
+                // console.log(key, obj[key]);
+                f(obj[key]);
+            }
+        });
+
+        function f(va) {
+            objStr = va;
+        }
+
+        return objStr;
+    }
+
+    function handleInfoData(data) {
+        var html = '';
+        //对象的遍历
+        Object.keys(data).forEach(function (key) {
+
+            var Cts = "personInfo,resumesInfoId,enableStatus,createTime,lastEditTime,priority,advice";
+            if (Cts.indexOf(key) >= 0) {
+                html += '';
+            } else if (key == 'resumesUserImg') {
+                html += `<div class="content-block-title ">` + handleInfoTitle(key) + `</div>
+                            <div class="card">
+                            <div class="card-content">
+                            <div class="card-content-inner">
+                            <img src="/resume/` + data[key] + `" alt="" width="100%"
+                            onerror="this.src=placeholder.getData({text: 'Image 404'})">
+                                </div>
+                            </div>
+                        </div>`;
+            } else {
+                html += `<div class="content-block-title ">` + handleInfoTitle(key) + `</div>
+                            <div class="card">
+                            <div class="card-content">
+                            <div class="card-content-inner" style="word-wrap:break-word;
+                                word-break:break-all;
+                                overflow: hidden;">` + data[key] + `</div>
+                            </div>
+                        </div>`;
+            }
+        });
+
+        $('.grid-wrap').html(html);
+    }
+</script>
+<script>$.init()</script>
+</body>
+</html>
